@@ -1,0 +1,11 @@
+/vis/open OGL
+/vis/viewer/set/viewpointThetaPhi 0 0 90
+/vis/drawVolume
+/vis/scene/add/axes 0 0 0 0.2 m
+/vis/scene/endOfEventAction accumulate
+/vis/scene/endOfRunAction accumulate
+/tracking/storeTrajectory 1
+/vis/scene/add/trajectories smooth
+/vis/sceneHandler/attach
+/vis/enable
+/run/initialize
