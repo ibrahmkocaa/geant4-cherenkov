@@ -3,13 +3,12 @@
 
 #include "G4VUserActionInitialization.hh"
 
-class ActionInitialization : public G4VUserActionInitialization
-{
+class ActionInitialization : public G4VUserActionInitialization {
 public:
-    ActionInitialization();
-    virtual ~ActionInitialization();
+  ActionInitialization();
+  virtual ~ActionInitialization();
 
-    virtual void Build() const override;
+  virtual void Build() const override;
 };
 
 #endif
