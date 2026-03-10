@@ -14,7 +14,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 {
     auto materials = MaterialManager::Instance();
     auto worldMat = materials->GetMaterial("G4_AIR");
-    auto waterMat = materials->GetMaterial("G4_WATER");
+    auto waterMat = materials->GetMaterial("LithiumDopedWater");
     auto steelMat = materials->GetMaterial("G4_STAINLESS-STEEL");
 
     // --- Boyutlar ---

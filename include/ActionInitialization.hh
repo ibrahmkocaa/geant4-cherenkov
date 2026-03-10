@@ -8,6 +8,7 @@ public:
   ActionInitialization();
   virtual ~ActionInitialization();
 
+  virtual void BuildForMaster() const override;
   virtual void Build() const override;
 };
 

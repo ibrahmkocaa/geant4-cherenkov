@@ -1,8 +1,10 @@
 #include "SteppingAction.hh"
+#include "RunAction.hh"
 #include "G4Event.hh"
 #include "G4EventManager.hh"
 #include "G4HadronicProcess.hh"
 #include "G4Nucleus.hh"
+#include "G4OpticalPhoton.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ProcessType.hh"
 #include "G4RunManager.hh"
@@ -16,6 +18,24 @@ SteppingAction::SteppingAction() {}
 SteppingAction::~SteppingAction() {}
 
 void SteppingAction::UserSteppingAction(const G4Step *step) {
+  // Cherenkov foton sayımı (tüm parçacıklar için)
+  const std::vector<const G4Track *> *secondaries =
+      step->GetSecondaryInCurrentStep();
+  if (secondaries && !secondaries->empty()) {
+    G4int cerenkovCount = 0;
+    for (const auto &sec : *secondaries) {
+      if (sec->GetDefinition() == G4OpticalPhoton::Definition()) {
+        const G4VProcess *creatorProcess = sec->GetCreatorProcess();
+        if (creatorProcess && creatorProcess->GetProcessName() == "Cerenkov") {
+          cerenkovCount++;
+        }
+      }
+    }
+    if (cerenkovCount > 0) {
+      RunAction::AddCerenkovCount(cerenkovCount);
+    }
+  }
+
   const G4Track *track = step->GetTrack();
   G4String particleName = track->GetDefinition()->GetParticleName();
 
@@ -83,11 +103,11 @@ void SteppingAction::UserSteppingAction(const G4Step *step) {
   }
 
   // ikincil parçacıkları listele
-  const std::vector<const G4Track *> *secondaries =
+  const std::vector<const G4Track *> *neutronSecondaries =
       step->GetSecondaryInCurrentStep();
-  if (secondaries && !secondaries->empty()) {
-    G4cout << "\n   --> Secondaries produced (" << secondaries->size() << "):";
-    for (const auto &sec : *secondaries) {
+  if (neutronSecondaries && !neutronSecondaries->empty()) {
+    G4cout << "\n   --> Secondaries produced (" << neutronSecondaries->size() << "):";
+    for (const auto &sec : *neutronSecondaries) {
       G4String secName = sec->GetDefinition()->GetParticleName();
       G4double secEkin = sec->GetKineticEnergy();
       G4ThreeVector secPos = sec->GetPosition();

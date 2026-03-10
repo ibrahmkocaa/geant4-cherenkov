@@ -33,7 +33,7 @@ void MaterialManager::CreateMaterials()
     // ==========================================================
     {
         G4double density = 1.0 * g/cm3;
-        G4double fractionGd = 0.1 * perCent;   // %0.3 Gd
+        G4double fractionGd = 0.5 * perCent;   // %0.3 Gd
         G4double fractionH2O = 100.0*perCent - fractionGd;
 
         G4Material* gdDopedWater = new G4Material("GdDopedWater", density, 2);
@@ -48,7 +48,7 @@ void MaterialManager::CreateMaterials()
     // ==========================================================
     {
         G4double density = 1.0 * g/cm3;
-        G4double fractionB = 0.1 * perCent;   // %0.3 B
+        G4double fractionB = 0.5 * perCent;   // %0.3 B
         G4double fractionH2O = 100.0*perCent - fractionB;
 
         G4Material* boronDopedWater = new G4Material("BoronDopedWater", density, 2);
@@ -63,7 +63,7 @@ void MaterialManager::CreateMaterials()
     // ==========================================================
     {
         G4double density = 1.0 * g/cm3;
-        G4double fractionLi = 0.1 * perCent;   // %0.3 Li
+        G4double fractionLi = 0.5 * perCent;   // %0.3 Li
         G4double fractionH2O = 100.0*perCent - fractionLi;
 
         // Li izotoplarını oluştur
@@ -126,6 +126,22 @@ void MaterialManager::CreateMaterials()
         waterMPT->AddProperty("ABSLENGTH", photonEnergy, absorption);
 
         fMaterials["G4_WATER"]->SetMaterialPropertiesTable(waterMPT);
+
+        // Katkılı sulara da aynı optik özellikleri ata
+        G4MaterialPropertiesTable* gdMPT = new G4MaterialPropertiesTable();
+        gdMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex);
+        gdMPT->AddProperty("ABSLENGTH", photonEnergy, absorption);
+        fMaterials["GdDopedWater"]->SetMaterialPropertiesTable(gdMPT);
+
+        G4MaterialPropertiesTable* boronMPT = new G4MaterialPropertiesTable();
+        boronMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex);
+        boronMPT->AddProperty("ABSLENGTH", photonEnergy, absorption);
+        fMaterials["BoronDopedWater"]->SetMaterialPropertiesTable(boronMPT);
+
+        G4MaterialPropertiesTable* liMPT = new G4MaterialPropertiesTable();
+        liMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex);
+        liMPT->AddProperty("ABSLENGTH", photonEnergy, absorption);
+        fMaterials["LithiumDopedWater"]->SetMaterialPropertiesTable(liMPT);
     }
 
     G4cout << "[MaterialManager] Custom materials created successfully.\n" << G4endl;
