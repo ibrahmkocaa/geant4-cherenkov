@@ -21,5 +21,6 @@ add_executable(main ${PROJECT_SOURCE_DIR}/main.cc ${SOURCES})
 # --- Kütüphaneler ---
 target_link_libraries(main ${Geant4_LIBRARIES})
 
+
 # --- Makro klasörünü build dizinine kopyala (isteğe bağlı) ---
 file(COPY ${PROJECT_SOURCE_DIR}/macros DESTINATION ${CMAKE_BINARY_DIR})

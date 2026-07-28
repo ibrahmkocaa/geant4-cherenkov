@@ -33,7 +33,7 @@ void MaterialManager::CreateMaterials()
     // ==========================================================
     {
         G4double density = 1.0 * g/cm3;
-        G4double fractionGd = 0.5 * perCent;   // %0.3 Gd
+        G4double fractionGd = 50.0 * perCent;   // %0.3 Gd
         G4double fractionH2O = 100.0*perCent - fractionGd;
 
         G4Material* gdDopedWater = new G4Material("GdDopedWater", density, 2);
@@ -44,16 +44,25 @@ void MaterialManager::CreateMaterials()
     }
 
     // ==========================================================
-    // 2. Boron katkılı su (%0.3 B)
+    // 2. Boron katkılı su (%0.3 zenginleştirilmiş B)
     // ==========================================================
     {
         G4double density = 1.0 * g/cm3;
-        G4double fractionB = 0.5 * perCent;   // %0.3 B
+        G4double fractionB = 0.1 * perCent;   // %0.3 B
         G4double fractionH2O = 100.0*perCent - fractionB;
+
+        // B izotoplarını oluştur
+        G4Isotope* isoB10 = new G4Isotope("B10", 5, 10, 10.013*g/mole);
+        G4Isotope* isoB11 = new G4Isotope("B11", 5, 11, 11.009*g/mole);
+
+        // Zenginleştirilmiş element (96% B10, 4% B11)
+        G4Element* BEnriched = new G4Element("EnrichedBoron", "B", 2);
+        BEnriched->AddIsotope(isoB10, 96.*perCent);
+        BEnriched->AddIsotope(isoB11, 4.*perCent);
 
         G4Material* boronDopedWater = new G4Material("BoronDopedWater", density, 2);
         boronDopedWater->AddMaterial(fMaterials["G4_WATER"], fractionH2O);
-        boronDopedWater->AddElement(nist->FindOrBuildElement("B"), fractionB);
+        boronDopedWater->AddElement(BEnriched, fractionB);
 
         fMaterials["BoronDopedWater"] = boronDopedWater;
     }

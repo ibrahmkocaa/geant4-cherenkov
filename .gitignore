@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# CMake / Geant4 build output
+build/
+cmake-build-*/
+
+# Generated thermalization outputs
+therma/thermalization_data.csv
+therma/thermalization_plot.pdf
+therma/thermalization_plot.png
