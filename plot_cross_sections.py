@@ -10,17 +10,24 @@ import matplotlib.ticker as ticker
 import csv
 
 # ── CSV dosyasını oku ──
-data = np.genfromtxt("neutron_capture_cross_sections.csv",
-                     delimiter=",", skip_header=1)
+CSV_FILE = "neutron_capture_cross_sections.csv"
 
-energy  = data[:, 0]   # eV
-li6_xs  = data[:, 1]   # barn
-li7_xs  = data[:, 2]
-b10_xs  = data[:, 3]
-gd155_xs = data[:, 4]
-gd157_xs = data[:, 5]
-h1_xs   = data[:, 6]   # su arka planı (H-1)
-o16_xs  = data[:, 7]   # su arka planı (O-16)
+# Sütunlar başlık adına göre eşleştirilir (yeni izotop eklenince sıra kaymasın)
+with open(CSV_FILE, newline="") as f:
+    header = next(csv.reader(f))
+col = {name.removesuffix("_barn"): i for i, name in enumerate(header)}
+
+data = np.genfromtxt(CSV_FILE, delimiter=",", skip_header=1)
+
+energy   = data[:, col["Energy_eV"]]   # eV
+li6_xs   = data[:, col["Li6"]]         # barn
+li7_xs   = data[:, col["Li7"]]
+b10_xs   = data[:, col["B10"]]
+b11_xs   = data[:, col["B11"]]
+gd155_xs = data[:, col["Gd155"]]
+gd157_xs = data[:, col["Gd157"]]
+h1_xs    = data[:, col["H1"]]          # su arka planı (H-1)
+o16_xs   = data[:, col["O16"]]         # su arka planı (O-16)
 
 # ── Grafik ayarları ──
 plt.rcParams.update({
@@ -48,6 +55,7 @@ colors = {
     "Gd157": "#E63946",   # Kırmızı
     "Gd155": "#F4A261",   # Turuncu
     "B10":   "#2A9D8F",   # Teal
+    "B11":   "#8ECFC6",   # Açık teal
     "Li6":   "#264653",   # Koyu mavi-yeşil
     "Li7":   "#A8DADC",   # Açık mavi
     "H1":    "#6A4C93",   # Mor (su arka planı)
@@ -66,6 +74,9 @@ safe_plot(ax, energy, gd155_xs, color=colors["Gd155"], linewidth=2.0,
           label=r"$^{155}$Gd  ($\sigma_{th}$ = 60899 b)")
 safe_plot(ax, energy, b10_xs,   color=colors["B10"],   linewidth=2.0,
           label=r"$^{10}$B  ($\sigma_{th}$ = 3844 b)")
+safe_plot(ax, energy, b11_xs,   color=colors["B11"],   linewidth=1.5,
+          linestyle="--",
+          label=r"$^{11}$B  ($\sigma_{th}$ = 0.0055 b)")
 safe_plot(ax, energy, li6_xs,   color=colors["Li6"],   linewidth=2.0,
           label=r"$^{6}$Li  ($\sigma_{th}$ = 939 b)")
 safe_plot(ax, energy, li7_xs,   color=colors["Li7"],   linewidth=1.5,

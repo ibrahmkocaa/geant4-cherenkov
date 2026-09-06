@@ -54,16 +54,23 @@ CONCENTRATIONS = [0.001, 0.003, 0.005]   # %0.1, %0.3, %0.5
 
 
 def read_cross_section_csv(filename="neutron_capture_cross_sections.csv"):
-    """CSV'den enerji ve izotop tesir kesitlerini okur."""
+    """
+    CSV'den enerji ve izotop tesir kesitlerini okur.
+    Sütunlar başlık adına göre eşleştirilir; extract_cross_sections.py'ye
+    yeni izotop eklendiğinde sıra kayması olmaz.
+    """
+    with open(filename, newline="") as f:
+        header = next(csv.reader(f))
+
     data = np.genfromtxt(filename, delimiter=",", skip_header=1)
-    return {
-        "energy": data[:, 0],    # eV
-        "Li6":    data[:, 1],    # barn
-        "Li7":    data[:, 2],
-        "B10":    data[:, 3],
-        "Gd155":  data[:, 4],
-        "Gd157":  data[:, 5],
-    }
+
+    # "Li6_barn" -> "Li6"
+    col = {name.removesuffix("_barn"): i for i, name in enumerate(header)}
+
+    result = {"energy": data[:, col["Energy_eV"]]}   # eV
+    for iso in ("Li6", "Li7", "B10", "B11", "Gd155", "Gd157"):
+        result[iso] = data[:, col[iso]]              # barn
+    return result
 
 
 def calc_number_density(mass_fraction, rho, A_element):

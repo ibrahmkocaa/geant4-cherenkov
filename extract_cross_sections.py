@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Geant4 G4NDL veri tabanından nötron absorpsiyon tesir kesitlerini çıkarır.
-  - Li-6, Li-7, B-10 : Capture + Inelastic (n,t ve n,α reaksiyonları)
-  - Gd-155, Gd-157   : Capture (radyatif yakalama baskın)
+  - Li-6, Li-7, B-10, B-11 : Capture + Inelastic (n,t ve n,α reaksiyonları)
+  - Gd-155, Gd-157         : Capture (radyatif yakalama baskın)
 Çıktı: neutron_capture_cross_sections.csv
 """
 
@@ -38,6 +38,13 @@ ISOTOPES = {
         "sources": [
             (CAPTURE_DIR,   "5_10_Boron.z"),
             (INELASTIC_DIR, "5_10_Boron.z"),    # B-10(n,α)Li-7
+        ]
+    },
+    "B11": {
+        "label": "B-11",
+        "sources": [
+            (CAPTURE_DIR,   "5_11_Boron.z"),    # B-11(n,γ) — σ_th ≈ 0.005 barn
+            (INELASTIC_DIR, "5_11_Boron.z"),    # eşikli (n,n'), (n,α) vb.
         ]
     },
     "Gd155": {
